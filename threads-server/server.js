@@ -1,3 +1,4 @@
+import path from "path";
 import express from "express"
 import dotenv from "dotenv"
 import connectDB from "./db/connectDB.js";
@@ -14,6 +15,8 @@ const app = express()
 
 
 const PORT = process.env.PORT || 8000;
+
+const __dirname = path.resolve()
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -35,6 +38,14 @@ app.use(cookieParser());
 app.use("/api/users", userRoutes)
 app.use("/api/posts", postRoutes)
 app.use("/api/reposts", repostRoutes)
+
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, '/threads-client/dist')))
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'threads-client', 'dist', 'index.html'))
+    })
+}
 
 
 app.listen(PORT, () => console.log(`Server started at http://localhost:${PORT}`))

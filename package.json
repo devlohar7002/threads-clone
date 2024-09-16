@@ -1,10 +1,11 @@
 {
   "name": "threads-server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
-    "start": "node server.js"
+    "dev": "NODE_ENV=development nodemon threads-server/server.js",
+    "start": "NODE_ENV=production node threads-server/server.js",
+    "build": "npm install && npm install --prefix threads-client && npm run build --prefix threads-client"
   },
   "type": "module",
   "keywords": [],
