@@ -7,11 +7,13 @@ import ToastComponent from './ToastComponent';
 import useShowToast from '../hooks/useShowToast';
 import { useNavigate } from 'react-router-dom';
 import userAtom from '../atoms/userAtom';
+import { Spinner } from '@radix-ui/themes';
 
 function SignupCard() {
     const setAuthScreenState = useSetRecoilState(authScreenAtom);
     const setUser = useSetRecoilState(userAtom)
     const { toast, showToast } = useShowToast();
+    const [loading, setLoading] = useState(false)
 
     const [inputs, setInputs] = useState({
         name: "",
@@ -24,6 +26,8 @@ function SignupCard() {
 
     const handleFormSubmit = async (event) => {
         event.preventDefault();
+        if (loading) return
+        setLoading(true)
         try {
             const response = await axios.post('/api/users/signup', inputs);
 
@@ -41,6 +45,8 @@ function SignupCard() {
                 showToast(true, "Something went wrong")
             }
             console.error('Signup error:', error);
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -71,7 +77,9 @@ function SignupCard() {
                             <input onChange={(e) => setInputs({ ...inputs, password: e.target.value })} type="password" name="password" id="password" placeholder="••••••••" className="bg-zinc-50 border border-zinc-200 text-gray-900 text-sm rounded-lg focus:ring-zinc-300 focus:border-zinc-300 block w-full p-2.5 dark:bg-zinc-800 dark:border-zinc-800 dark:placeholder-zinc-500 dark:text-white dark:focus:ring-zinc-700 dark:focus:border-zinc-700" required="" />
                         </div>
 
-                        <button onClick={(e) => handleFormSubmit(e)} className="w-full text-white bg-zinc-800 hover:bg-zinc-950 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-black dark:bg-zinc-300 dark:hover:bg-zinc-200 ">Create an account</button>
+                        <button onClick={(e) => handleFormSubmit(e)} className="w-full flex justify-center items-center text-white bg-zinc-800 hover:bg-zinc-950 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-black dark:bg-zinc-300 dark:hover:bg-zinc-200 ">
+                            {loading ? <Spinner /> : 'Sign Up'}
+                        </button>
                         <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                             Already have an account? <button className="font-medium text-primary-600 hover:underline dark:text-primary-500" onClick={() => setAuthScreenState('login')}>Login here</button>
                         </p>

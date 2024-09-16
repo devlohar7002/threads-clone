@@ -8,11 +8,13 @@ import userAtom from '../atoms/userAtom';
 import { useState } from 'react';
 import ToastComponent from './ToastComponent';
 import UpdateProfilePage from '../pages/UpdateProfilePage';
+import { Spinner } from '@radix-ui/themes';
 
 function SignupCard() {
     const setAuthScreenState = useSetRecoilState(authScreenAtom);
     const setUser = useSetRecoilState(userAtom)
     const { toast, showToast } = useShowToast();
+    const [loading, setLoading] = useState(false)
 
     const [inputs, setInputs] = useState({
         username: "",
@@ -23,6 +25,8 @@ function SignupCard() {
 
     const handleFormSubmit = async (event) => {
         event.preventDefault();
+        if (loading) return
+        setLoading(true)
         try {
             const response = await axios.post('/api/users/login', inputs);
 
@@ -39,6 +43,8 @@ function SignupCard() {
                 showToast(true, "Something went wrong")
             }
             console.error('Signin error:', error);
+        } finally {
+            setLoading(false)
         }
     };
     return (
@@ -63,7 +69,9 @@ function SignupCard() {
                         </div>
 
 
-                        <button onClick={handleFormSubmit} className="w-full text-white bg-zinc-800 hover:bg-zinc-950 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-black dark:bg-zinc-300 dark:hover:bg-zinc-200 ">Sign In</button>
+                        <button onClick={handleFormSubmit} className="w-full flex justify-center items-center text-white bg-zinc-800 hover:bg-zinc-950 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-black dark:bg-zinc-300 dark:hover:bg-zinc-200 ">
+                            {loading ? <Spinner /> : 'Sign In'}
+                        </button>
                         <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                             Dont have an account? <button onClick={() => setAuthScreenState('signup')} className="font-medium text-primary-600 hover:underline dark:text-primary-500">Signup here</button>
                         </p>
