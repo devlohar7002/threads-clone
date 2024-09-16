@@ -58,6 +58,7 @@ export default function App() {
               {!user && <Route path="/auth" element={<AuthPage />} />}
               {user && <Route path="/:username" element={<UserPage />}>
                 <Route path="replies" element={<UserPage />} />
+                <Route path="reposts" element={<UserPage />} />
               </Route>}
               {user && <Route path="/:username/post/:postId" element={<PostPage />} />}
               <Route path="*" element={<Navigate to={user ? `/${user.username}` : "/auth"} replace />} />

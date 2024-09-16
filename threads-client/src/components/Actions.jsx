@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState, useRef, useEffect } from "react";
 import useShowToast from "@/hooks/useShowToast";
 import ToastComponent from "./ToastComponent";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import userAtom from '../atoms/userAtom';
 import { Textarea } from 'flowbite-react';
 import { Spinner } from "@radix-ui/themes";
@@ -11,6 +11,8 @@ import { Link } from 'react-router-dom'
 import formatPostDate from "@/lib/formatPostDate";
 import { Separator } from "@radix-ui/themes";
 import { DropdownMenu } from "@radix-ui/themes";
+import currentPageAtom from "@/atoms/currentPageAtom";
+import newPostAtom from "@/atoms/newPostAtom";
 
 const Actions = ({ post: post_ }) => {
 
@@ -21,6 +23,8 @@ const Actions = ({ post: post_ }) => {
 	const [liked, setLiked] = useState(post?.likes.includes(user._id))
 	const [isLiking, setIsLiking] = useState(false)
 	const [isReplying, setIsReplying] = useState(false)
+	const [isReposting, setIsReposting] = useState(false)
+	const [isRemoving, setIsRemoving] = useState(false)
 
 	const modalRef = useRef(null);
 	const textAreaRef = useRef(null);
@@ -31,7 +35,7 @@ const Actions = ({ post: post_ }) => {
 	const [charCount, setCharCount] = useState(0);
 	const [updating, setUpdating] = useState(false)
 	const [lineBottom, setLineBottom] = useState(145);
-
+	const currentPage = useRecoilValue(currentPageAtom)
 
 
 
@@ -70,7 +74,6 @@ const Actions = ({ post: post_ }) => {
 		setIsReplying(true)
 		try {
 			setUpdating(true)
-			console.log("postId sent", post._id)
 			const response = await axios.put(`/api/posts/reply`, {
 				postedBy: currentUser._id,
 				text: inputValue,
@@ -111,25 +114,44 @@ const Actions = ({ post: post_ }) => {
 
 	};
 
-	const handlePostClick = (user, post) => {
-		try {
-
-			// navigate(`/${postedByUser.username}/post/${post._id}`)
-			navigate(`/${user.username}/post/${post._id}`)
-		} catch (error) {
-
-		}
-	}
-
 	const handleRepost = async () => {
+		if (!user) return showToast(true, "You must be logged in")
+		if (isReposting) return;
+		setIsReposting(true)
 		try {
+			const response = await axios.post(`/api/reposts/repost/${post._id}`)
 
+			console.log(response.data)
+			showToast(false, "Reposted")
 		} catch (error) {
-
+			console.log(error)
+			showToast(true, error.response.data.error)
+		} finally {
+			setIsReposting(false)
 		}
 	}
 
+	const removeRepost = async () => {
+		if (!user) return showToast(true, "You must be logged in")
+		if (isRemoving) return;
+		setIsRemoving(true)
+		try {
+			const response = await axios.delete(`/api/reposts/delete/${post._id}`)
+			console.log(response.data)
+			showToast(false, "Removed")
+		} catch (error) {
+			console.log(error)
+			showToast(true, error.response.data.error)
+		} finally {
+			setIsRemoving(false)
+		}
+	}
 
+	const copyURL = () => {
+		const currentURL = window.location.href;
+		navigator.clipboard.writeText(currentURL + `/post/${post._id}`);
+		showToast(false, "Link Copied");
+	};
 
 
 	return (
@@ -192,27 +214,50 @@ const Actions = ({ post: post_ }) => {
 									<RepostSVG className="w-4 h-4 text-black dark:text-white cursor-pointer" />
 								</div>
 							</DropdownMenu.Trigger>
-							<DropdownMenu.Content>
-								<DropdownMenu.Item className="bg-dropdown" onClick={handleRepost}>
-									<div className='flex justify-between items-center gap-6'>
-										Repost
-										<div>
 
-											<RepostSVG />
+							{currentPage === 'Profile' ?
+								<DropdownMenu.Content>
+									<DropdownMenu.Item className="bg-dropdown" onClick={removeRepost}>
+										<div className='flex justify-between items-center gap-6 text-red-500'>
+											Remove
+											<div className="">
+												<RepostSVG />
+											</div>
+
 										</div>
+									</DropdownMenu.Item>
+								</DropdownMenu.Content>
+								:
+								<DropdownMenu.Content>
+									<DropdownMenu.Item className="bg-dropdown" onClick={handleRepost}>
+										<div className='flex justify-between items-center gap-6'>
+											Repost
+											<div>
+												<RepostSVG />
+											</div>
 
-									</div>
+										</div>
+									</DropdownMenu.Item>
+								</DropdownMenu.Content>
+							}
 
-
-								</DropdownMenu.Item>
-							</DropdownMenu.Content>
 						</DropdownMenu.Root>
 
 					</Flex>
 
 
 					<Flex justify={"center"} align={"center"} className="hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full w-8 h-8 cursor-pointer text-zinc-500">
-						<ShareSVG />
+
+						<DropdownMenu.Root>
+							<DropdownMenu.Trigger>
+								<div className="p-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-full">
+									<ShareSVG className="w-6 h-6 text-black dark:text-white cursor-pointer" />
+								</div>
+							</DropdownMenu.Trigger>
+							<DropdownMenu.Content >
+								<DropdownMenu.Item className="bg-dropdown" onClick={copyURL}>Copy Link</DropdownMenu.Item>
+							</DropdownMenu.Content>
+						</DropdownMenu.Root>
 					</Flex>
 				</Flex>
 
@@ -267,19 +312,15 @@ const Actions = ({ post: post_ }) => {
 
 							</div>
 
-							<div className='break-all whitespace-normal' onClick={() => handlePostClick(postedByUser, post)}>
+							<div className='break-all whitespace-normal'>
 								{post?.text}
 							</div>
 
-							{post?.img && <Flex onClick={() => handlePostClick(postedByUser, post)}>
+							{post?.img && <Flex >
 								<img className="max-h-96 overflow-hidden border-zinc-200 dark:border-zinc-800 rounded-lg" src={post?.img} alt="" />
 							</Flex>}
 						</div>
 					</div>
-
-
-
-
 
 					<div className="flex flex-row py-4 px-4 gap-2 border-zinc-200 dark:border-zinc-800">
 

@@ -121,7 +121,7 @@ export default function UserHeader({ user }) {
                 }
 
             </div>
-            <div className="grid grid-cols-2 justify-center text-center items-center font-[450]">
+            <div className="grid grid-cols-3 justify-center text-center items-center font-[450]">
                 <NavLink
                     to={`/${username}`}
                     className={({ isActive }) =>
@@ -138,6 +138,15 @@ export default function UserHeader({ user }) {
                     }
                 >
                     Replies
+                </NavLink>
+
+                <NavLink
+                    to={`/${username}/reposts`}
+                    className={({ isActive }) =>
+                        isActive ? 'text-zinc-900 border-b pb-4 border-zinc-900 dark:text-white dark:border-white' : 'text-zinc-400 border-b pb-4  dark:border-zinc-800'
+                    }
+                >
+                    Repost
                 </NavLink>
 
                 {toast.show && <ToastComponent error={toast.errorStatus} message={toast.message} />}

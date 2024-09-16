@@ -15,11 +15,13 @@ import UserSkeleton from '../components/UserSkeleton';
 import currentPageAtom from '../atoms/currentPageAtom';
 import newPostAtom from '../atoms/newPostAtom';
 import UserReplies from '@/components/UserReplies';
+import UserReposts from '@/components/UserReposts';
 
 function UserPage() {
   // const user = useRecoilValue(userAtom);
   const [user, setUser] = useState(null);
   const [userPosts, setUserPosts] = useState([])
+  const [userReposts, setUserReposts] = useState([])
   const { username } = useParams()
   const [loading, setLoading] = useState(true)
 
@@ -39,6 +41,7 @@ function UserPage() {
 
   const location = useLocation();
   const isRepliesPage = location.pathname.endsWith('/replies');
+  const isRepostsPage = location.pathname.endsWith('/reposts');
 
 
   useEffect(() => {
@@ -68,6 +71,8 @@ function UserPage() {
           setUserPosts(response.data.filter((ele) => ele.replyTo))
         }
 
+        // console.log(userPosts)
+
       } catch (error) {
         setGlobalError(true)
       }
@@ -83,6 +88,25 @@ function UserPage() {
     // };
 
   }, [username, loading, newPost, isRepliesPage])
+
+  useEffect(() => {
+    const fetchReposts = async () => {
+      try {
+        const response = await axios.get(`/api/reposts/repost/feed/${username}`)
+        // console.log(response.data)
+        const postsArray = response.data.map(repost => repost.post);
+
+        setUserReposts(postsArray)
+        console.log(userReposts)
+      } catch (error) {
+
+      }
+    }
+
+    if (isRepostsPage) {
+      fetchReposts()
+    }
+  }, [loading, isRepostsPage])
 
 
 
@@ -101,10 +125,14 @@ function UserPage() {
     <>
       <UserHeader user={user} />
 
+      {isRepostsPage ? userReposts.map((post) => <UserReposts key={post._id} post={post} />)
+        :
+        userPosts.map((post) => (
+          isRepliesPage ? <UserReplies key={post._id} post={post} /> : <UserPost key={post._id} post={post} />
+        ))
+      }
 
-      {userPosts.map((post) => (
-        isRepliesPage ? <UserReplies key={post._id} post={post} /> : <UserPost key={post._id} post={post} />
-      ))}
+
       {toast.show && <ToastComponent error={toast.errorStatus} message={toast.message} />}
 
     </>
