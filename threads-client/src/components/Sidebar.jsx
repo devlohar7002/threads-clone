@@ -15,6 +15,7 @@ import isNonAcrollableAtom from '../atoms/isNonScrollableAtom';
 import { CiUser } from "react-icons/ci";
 import { AiOutlineUser } from "react-icons/ai";
 import newPostAtom from '../atoms/newPostAtom'
+import DarkModeButton from "./DarkModeButton"
 
 
 function Sidebar() {
@@ -91,6 +92,8 @@ function Sidebar() {
                     <AiOutlineUser className='h-[30px] w-[30px] transition duration-300 ease-in-out' />
 
                 </NavLink>
+
+                <DarkModeButton />
             </div>
 
             <dialog id="my_modal_2" ref={modalRef} className="modal z-10 shadow-lg bg-zinc-950 bg-opacity-85 ">
