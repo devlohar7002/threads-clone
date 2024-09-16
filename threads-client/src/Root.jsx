@@ -7,11 +7,12 @@ import { ThemeProvider } from 'next-themes';
 import { RecoilRoot } from 'recoil';
 import themeAtom from "./atoms/themeAtom"
 import { useRecoilValue } from 'recoil';
+import { useState } from 'react';
 
 function Root() {
-    const themeState = useRecoilValue(themeAtom)
-    useEffect(() => {
-    }, [themeState])
+    const themeState = useRecoilValue(themeAtom);
+
+
 
     return (
         <>
