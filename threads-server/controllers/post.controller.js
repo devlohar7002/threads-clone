@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import Post from '../models/post.model.js';
 import { v2 as cloudinary } from "cloudinary"
 import mongoose from "mongoose";
+import Repost from '../models/repost.model.js'
 
 const createPost = async (req, res) => {
     try {
@@ -108,6 +109,8 @@ const deletePost = async (req, res) => {
             }
         }
 
+        await Repost.findOneAndDelete({ post: req.params.id }).session(session);
+
         // Delete the post
         await Post.findByIdAndDelete(req.params.id).session(session); // Triggers pre/post middleware if any
 
@@ -156,6 +159,7 @@ const deletePostRecursively = async (postId, session) => {
         }
 
         // Delete the post
+        await Repost.findOneAndDelete({ post: postId }).session(session);
         await Post.findByIdAndDelete(postId).session(session);
     }
 };

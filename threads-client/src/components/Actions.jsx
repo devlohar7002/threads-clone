@@ -13,6 +13,7 @@ import { Separator } from "@radix-ui/themes";
 import { DropdownMenu } from "@radix-ui/themes";
 import currentPageAtom from "@/atoms/currentPageAtom";
 import newPostAtom from "@/atoms/newPostAtom";
+import { useParams, useLocation } from "react-router-dom";
 
 const Actions = ({ post: post_ }) => {
 
@@ -37,6 +38,10 @@ const Actions = ({ post: post_ }) => {
 	const [lineBottom, setLineBottom] = useState(145);
 	const currentPage = useRecoilValue(currentPageAtom)
 
+	const { username } = useParams()
+
+	const location = useLocation();
+	const isRepostsPage = location.pathname.endsWith('/reposts');
 
 
 
@@ -215,7 +220,7 @@ const Actions = ({ post: post_ }) => {
 								</div>
 							</DropdownMenu.Trigger>
 
-							{currentPage === 'Profile' ?
+							{username === user.username && isRepostsPage ?
 								<DropdownMenu.Content>
 									<DropdownMenu.Item className="bg-dropdown" onClick={removeRepost}>
 										<div className='flex justify-between items-center gap-6 text-red-500'>

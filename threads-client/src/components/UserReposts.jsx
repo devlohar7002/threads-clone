@@ -133,15 +133,15 @@ function UserRepost({ post: post_ }) {
                     <PostSkeleton />
                     :
                     <>
-                        <div className='flex flex-col gap-4'>
+                        <div className='flex flex-col gap-4 w-full'>
                             <div className='flex items-center gap-1 text-neutral-400 text-sm'>
 
                                 <div className='mr-2'><RepostSVG /></div>
                                 <div className='font-semibold'>{username} </div>
                                 <div>reposted</div>
                             </div>
-                            <div className='flex flex-row gap-4'>
-                                <Link to={currentUser.username !== postedByUser.username ? postedByUser.username : '#'}>
+                            <div className='flex flex-row gap-4 w-full'>
+                                <Link to={currentUser.username !== postedByUser.username ? `/${postedByUser.username}` : '#'}>
                                     <div className='flex justify-center min-w-11 cursor-pointer'>
                                         <img className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-800 hover:scale-105" src={postedByUser.profilePic || '/default-avatar.jpg'} alt="" />
                                     </div>
@@ -149,7 +149,7 @@ function UserRepost({ post: post_ }) {
                                     <div className='flex justify-between w-full'>
                                         <div className="flex flex-row text-zinc gap-2 items-center">
                                             {/* <img className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-800 object-cover" src="/zuck-avatar.png" alt="" /> */}
-                                            <Link to={currentUser.username !== postedByUser.username ? postedByUser.username : '#'}>
+                                            <Link to={currentUser.username !== postedByUser.username ? `/${postedByUser.username}` : '#'}>
                                                 <div className='flex justify-center items-center gap-1 hover:underline'>
                                                     <span className="font-semibold">{postedByUser.username}</span>
                                                     <img className="w-4 h-4 rounded-full border border-zinc-200 dark:border-zinc-800" src="/verified.png" alt="" />
