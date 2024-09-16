@@ -4,6 +4,7 @@ import connectDB from "./db/connectDB.js";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/user.route.js"
 import postRoutes from "./routes/post.route.js"
+import repostRoutes from "./routes/repost.route.js"
 import { v2 as cloudinary } from "cloudinary"
 
 dotenv.config();
@@ -31,10 +32,9 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 
 // Routes
-
 app.use("/api/users", userRoutes)
-
 app.use("/api/posts", postRoutes)
+app.use("/api/reposts", repostRoutes)
 
 
 app.listen(PORT, () => console.log(`Server started at http://localhost:${PORT}`))
