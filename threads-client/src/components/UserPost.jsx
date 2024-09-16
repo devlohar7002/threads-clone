@@ -80,7 +80,6 @@ function UserPost({ post: post_ }) {
         setLoading(true)
         try {
             const response = await axios.delete(`/api/posts/${post._id}`)
-            console.log(response.data)
             showToast(false, "Post deleted")
             setPost(null)
         } catch (error) {

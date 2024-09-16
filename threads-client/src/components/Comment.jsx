@@ -19,12 +19,10 @@ function Comment({ reply }) {
         const fetchPost = async () => {
             try {
                 const response = await axios.get(`/api/posts/${reply}`)
-                // console.log(response.data)
+
                 setCurrentReply(response.data)
                 if (response.data) {
                     const res = await axios.get(`/api/users/profile/${response.data.postedBy}`);
-                    console.log('User data:', res.data);
-                    console.log(res.data._id)
                     setPostedByUser(res.data);
                 }
             } catch (error) {

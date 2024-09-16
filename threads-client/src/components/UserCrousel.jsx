@@ -23,7 +23,7 @@ export function UserCrousel() {
         const fetchUsers = async () => {
             try {
                 const response = await axios("/api/users/randomUsers");
-                console.log(response.data);
+
                 setUsers(response.data);
             } catch (error) {
                 console.log(error);

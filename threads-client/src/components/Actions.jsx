@@ -84,7 +84,7 @@ const Actions = ({ post: post_ }) => {
 				text: inputValue,
 				postId: post._id
 			})
-			console.log(response.data)
+
 			setPost({ ...post, replies: [...post.replies, response.data.reply._id] })
 			setInputValue("")
 			modalRef.current.close();
@@ -103,7 +103,7 @@ const Actions = ({ post: post_ }) => {
 		setIsLiking(true)
 		try {
 			const response = await axios.put(`/api/posts/like/${post._id}`)
-			console.log(response.data)
+
 
 			if (!liked) {
 				setPost({ ...post, likes: [...post.likes, user._id] })
@@ -126,10 +126,10 @@ const Actions = ({ post: post_ }) => {
 		try {
 			const response = await axios.post(`/api/reposts/repost/${post._id}`)
 
-			console.log(response.data)
+
 			showToast(false, "Reposted")
 		} catch (error) {
-			console.log(error)
+
 			showToast(true, error.response.data.error)
 		} finally {
 			setIsReposting(false)
@@ -142,10 +142,10 @@ const Actions = ({ post: post_ }) => {
 		setIsRemoving(true)
 		try {
 			const response = await axios.delete(`/api/reposts/delete/${post._id}`)
-			console.log(response.data)
+
 			showToast(false, "Removed")
 		} catch (error) {
-			console.log(error)
+
 			showToast(true, error.response.data.error)
 		} finally {
 			setIsRemoving(false)

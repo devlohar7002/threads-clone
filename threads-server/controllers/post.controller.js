@@ -242,7 +242,7 @@ const replyToPost = async (req, res) => {
 
         const { postedBy, text, postId } = req.body;
 
-        console.log(postId)
+
 
         if (!postedBy || !text) {
             return res.status(400).json({ message: "PostedBy and text fields are required" })

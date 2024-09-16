@@ -93,7 +93,7 @@ function HomePage() {
 
             observer.current = new IntersectionObserver((entries) => {
                 if (entries[0].isIntersecting) {
-                    console.log("Last post visible, fetching more...");
+
                     getFeedPosts(); // Fetch new posts when the last post is visible
                 }
             });
@@ -108,7 +108,7 @@ function HomePage() {
 
     const getFeedPosts = async () => {
         if (!hasMorePosts || loading) return;
-        console.log("callllll")
+
         setLoading(true)
         try {
             const response = await axios.get('/api/posts/post/feed', {
@@ -116,7 +116,7 @@ function HomePage() {
                     lastCreatedAt: lastCreatedAt // Send the last createdAt timestamp for pagination
                 }
             })
-            console.log("newpost", newPost)
+
             setLastCreatedAt(response.data.lastCreatedAt);
             setHasMorePosts(response.data.hasMorePosts);
 
@@ -124,7 +124,7 @@ function HomePage() {
                 lastPostRef.current.scrollIntoView({ behavior: 'smooth' });
             }
 
-            console.log(response.data)
+
             if (newPost) {
                 setPosts((prevPosts) => [newPost, ...prevPosts, ...response.data.feedPosts]);
             } else {

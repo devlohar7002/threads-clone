@@ -6,7 +6,7 @@ const repostPost = async (req, res) => {
     try {
         const userId = req.user._id;
         const { id: postId } = req.params;
-        console.log(userId, postId)
+
 
         const existingRepost = await Repost.findOne({ user: userId, post: postId });
         if (existingRepost) {
@@ -33,9 +33,9 @@ const getUserReposts = async (req, res) => {
     try {
 
         const { username } = req.params;
-        console.log(username)
+
         const user = await User.findOne({ username }).select("-password")
-        console.log(user)
+
         if (!user) return res.status(400).json({ message: "User not found" });
 
 

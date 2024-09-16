@@ -93,11 +93,11 @@ function UserPage() {
     const fetchReposts = async () => {
       try {
         const response = await axios.get(`/api/reposts/repost/feed/${username}`)
-        // console.log(response.data)
+
         const postsArray = response.data.map(repost => repost.post);
 
         setUserReposts(postsArray)
-        console.log(userReposts)
+
       } catch (error) {
 
       }
