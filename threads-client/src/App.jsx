@@ -42,7 +42,7 @@ export default function App() {
   return (
     <BrowserRouter>
 
-      <div className=" h-screen flex justify-center items-center ">
+      <div className=" !contain-none h-screen flex justify-center items-center ">
         {!enlargedImage && <nav className="fixed top-0 z-10 w-full">
           <Header />
         </nav>}
@@ -50,7 +50,7 @@ export default function App() {
 
         {globalError ? <ErrorPage /> :
 
-          <div id="scrollableDiv" className={user && !isNonScrollable ? " fixed top-36 left-0 right-0 bottom-0 pb-32 min-[840px]:pb-16 overflow-y-scroll hide-scrollbar h-full min-h-screen m-auto max-w-[640px] border-[1px] shadow-lg dark:shadow-zinc-950 border-zinc-200 dark:border-neutral-800 rounded-t-[40px] bg-white dark:bg-neutral-900" : "flex flex-col justify-center items-center dark:text-white "}>
+          <div id="scrollableDiv" className={user && !isNonScrollable ? "fixed top-36 left-0 right-0 bottom-0 pb-32 min-[840px]:pb-16 overflow-y-scroll hide-scrollbar h-full min-h-screen m-auto max-w-[640px] border-[1px] shadow-lg dark:shadow-zinc-950 border-zinc-200 dark:border-neutral-800 rounded-t-[40px] bg-white dark:bg-neutral-900" : "flex flex-col justify-center items-center dark:text-white "}>
             <Routes>
               {user && <Route path="/auth" element={<Navigate to={`/${user.username}`} replace />} />}
               <Route path="/update" element={user ? <UpdateProfilePage /> : <Navigate to={`/auth`} replace />} />
