@@ -39,6 +39,10 @@ body {
   -webkit-transform: translateZ(0);
 }
 
+#headerDiv {
+  -webkit-transform: translateZ(0);
+}
+
 .modal-centered {
   display: flex;
   align-items: center;

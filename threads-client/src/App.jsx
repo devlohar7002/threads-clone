@@ -43,7 +43,7 @@ export default function App() {
     <BrowserRouter>
 
       <div className=" h-screen flex justify-center items-center ">
-        {!enlargedImage && <nav className="fixed top-0 z-10 w-full">
+        {!enlargedImage && <nav id="headerDiv" className="fixed top-0 z-10 w-full">
           <Header />
         </nav>}
         {user && !isNonScrollable && !enlargedImage && <Sidebar />}
