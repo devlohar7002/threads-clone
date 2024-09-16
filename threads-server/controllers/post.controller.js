@@ -288,33 +288,108 @@ const replyToPost = async (req, res) => {
     }
 };
 
-const getFeedPosts = async (req, res, next) => {
+// const getFeedPosts = async (req, res, next) => {
+//     try {
+//         const userId = req.user._id;
+//         const user = await User.findById(userId);
+//         if (!user) {
+//             return res.status(404).json({ error: "User not found" });
+//         }
+
+//         const following = user.following;
+
+//         const feedPosts = await Post.find({ postedBy: { $in: following } }).sort({ createdAt: -1 });
+
+//         if (feedPosts.length <= 10) {
+//             const posts = await Post.aggregate([
+//                 {
+//                     $match: {
+//                         postedBy: { $ne: new mongoose.Types.ObjectId(userId) }, // Exclude current user
+//                     },
+//                 },
+//                 { $sample: { size: 10 } },
+//             ]).sort({ createdAt: -1 });
+
+//             feedPosts.push(...posts);
+//         }
+//         res.status(200).json(feedPosts);
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// };
+
+
+const getFeedPosts = async (req, res) => {
     try {
         const userId = req.user._id;
-        const user = await User.findById(userId);
+        const { lastCreatedAt } = req.query; // Get the last createdAt timestamp from the query for pagination
+        const limit = 20; // Fetch a batch of 20 posts at a time
+
+        // Fetch the current user to get their list of followed users
+        const user = await User.findById(userId).populate('following');
+
         if (!user) {
-            return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({ error: 'User not found' });
         }
 
-        const following = user.following;
+        // Get the followed user IDs
+        const followedUserIds = user.following.map(followedUser => followedUser._id);
 
-        const feedPosts = await Post.find({ postedBy: { $in: following } }).sort({ createdAt: -1 });
+        // Build the base query to fetch posts from followed users
+        let query = {
+            postedBy: { $in: followedUserIds },
+            replyTo: null // Exclude replies
+        };
 
-        if (feedPosts.length <= 10) {
-            const posts = await Post.aggregate([
-                {
-                    $match: {
-                        postedBy: { $ne: new mongoose.Types.ObjectId(userId) }, // Exclude current user
-                    },
-                },
-                { $sample: { size: 10 } },
-            ]).sort({ createdAt: -1 });
-
-            feedPosts.push(...posts);
+        // If lastCreatedAt is provided, only fetch posts with createdAt < lastCreatedAt (to get older posts)
+        if (lastCreatedAt) {
+            query.createdAt = { $lt: new Date(lastCreatedAt) };
         }
-        res.status(200).json(feedPosts);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+
+        // Fetch posts from followed users
+        const followedUserPosts = await Post.find(query)
+            .sort({ createdAt: -1 }) // Sort by newest posts first
+            .limit(limit + 1); // Limit the number of posts to 20
+
+        // Get suggested posts from users the user doesn't follow
+        let suggestedQuery = {
+            postedBy: { $nin: [...followedUserIds, userId] },
+            replyTo: null // Exclude replies
+        };
+
+        if (lastCreatedAt) {
+            suggestedQuery.createdAt = { $lt: new Date(lastCreatedAt) };
+        }
+
+        const suggestedPosts = await Post.find(suggestedQuery)
+            .sort({ createdAt: -1 })
+            .limit(limit + 1);
+
+        const hasMoreFollowedPosts = followedUserPosts.length > limit;
+        const hasMoreSuggestedPosts = suggestedPosts.length > limit;
+
+        // Trim the extra post (we fetched `limit + 1` to check if there are more posts)
+        const finalFollowedUserPosts = hasMoreFollowedPosts ? followedUserPosts.slice(0, limit) : followedUserPosts;
+        const finalSuggestedPosts = hasMoreSuggestedPosts ? suggestedPosts.slice(0, limit) : suggestedPosts;
+
+        // Combine followed and suggested posts
+        let feedPosts = [...finalFollowedUserPosts, ...finalSuggestedPosts];
+
+        // Determine if there are more posts overall
+        const hasMorePosts = hasMoreFollowedPosts || hasMoreSuggestedPosts;
+
+
+
+        // Send response
+        res.status(200).json({
+            feedPosts,
+            hasMorePosts,
+            lastCreatedAt: feedPosts.length > 0 ? feedPosts[feedPosts.length - 1].createdAt : null // Return last post's createdAt for next query
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
     }
 };
 

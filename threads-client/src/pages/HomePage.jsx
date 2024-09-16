@@ -15,13 +15,13 @@ import usePreviewImage from '../hooks/usePreviewImage';
 import currentPageAtom from '../atoms/currentPageAtom';
 import { UserCrousel } from '../components/UserCrousel';
 import newPostAtom from '../atoms/newPostAtom';
-
+import { useCallback } from 'react';
 
 
 function HomePage() {
     const currentUser = useRecoilValue(userAtom)
     const [posts, setPosts] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const { toast, showToast } = useShowToast()
     const modalRef = useRef(null);
     const textAreaRef = useRef(null);
@@ -81,26 +81,65 @@ function HomePage() {
         }
     }
 
-    useEffect(() => {
-        const getFeedPosts = async () => {
-            setLoading(true)
-            try {
+    const [lastCreatedAt, setLastCreatedAt] = useState(null);
 
-                const response = await axios.get('/api/posts/post/feed')
-                console.log("newpost", newPost)
-                if (newPost) {
-                    setPosts([newPost, ...response.data])
-                } else {
-                    setPosts(response.data)
+    const observer = useRef();
+    const lastPostRef = useRef();
+
+    const lastPostObserver = useCallback(
+        (node) => {
+            if (loading) return;
+            if (observer.current) observer.current.disconnect();
+
+            observer.current = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    console.log("Last post visible, fetching more...");
+                    getFeedPosts(); // Fetch new posts when the last post is visible
                 }
+            });
+
+            if (node) observer.current.observe(node);
+        },
+        [loading] // Dependency on loading state
+    );
+
+    const [hasMorePosts, setHasMorePosts] = useState(true);
 
 
-            } catch (error) {
-                showToast(true, error.message)
-            } finally {
-                setLoading(false)
+    const getFeedPosts = async () => {
+        if (!hasMorePosts || loading) return;
+        console.log("callllll")
+        setLoading(true)
+        try {
+            const response = await axios.get('/api/posts/post/feed', {
+                params: {
+                    lastCreatedAt: lastCreatedAt // Send the last createdAt timestamp for pagination
+                }
+            })
+            console.log("newpost", newPost)
+            setLastCreatedAt(response.data.lastCreatedAt);
+            setHasMorePosts(response.data.hasMorePosts);
+
+            if (lastPostRef.current) {
+                lastPostRef.current.scrollIntoView({ behavior: 'smooth' });
             }
+
+            console.log(response.data)
+            if (newPost) {
+                setPosts((prevPosts) => [newPost, ...prevPosts, ...response.data.feedPosts]);
+            } else {
+                setPosts((prevPosts) => [...prevPosts, ...response.data.feedPosts]);
+            }
+
+
+        } catch (error) {
+            showToast(true, error.message)
+        } finally {
+            setLoading(false)
         }
+    }
+
+    useEffect(() => {
 
         getFeedPosts()
         // return () => {
@@ -115,47 +154,47 @@ function HomePage() {
         setCurrentPage('Home')
     }, [setCurrentPage])
 
-    if (loading) {
-        return (
-            <div className=''>
-                <UserSkeleton />
-            </div>)
-    }
+    // if (loading) {
+    //     return (
+    //         <div className=''>
+    //             <UserSkeleton />
+    //         </div>)
+    // }
 
-    if (posts.length === 0) {
-        return (
-            <>
-                <div className='flex justify-between items-center py-4 px-6 border-b dark:border-zinc-800 border-zinc-200'>
-                    <div className='flex justify-center items-center gap-4 text-zinc-400 dark:text-zinc-500'>
-                        <img className="rounded-full w-10 h-10 object-cover border dark:border-zinc-700" src={`${currentUser?.profilePic || 'default-avatar.jpg'}`} alt="Avatar" />
+    // if (posts.length === 0) {
+    //     return (
+    //         <>
+    //             <div className='flex justify-between items-center py-4 px-6 border-b dark:border-zinc-800 border-zinc-200'>
+    //                 <div className='flex justify-center items-center gap-4 text-zinc-400 dark:text-zinc-500'>
+    //                     <img className="rounded-full w-10 h-10 object-cover border dark:border-zinc-700" src={`${currentUser?.profilePic || 'default-avatar.jpg'}`} alt="Avatar" />
 
-                        <button onClick={() => {
-                            document.getElementById('my_modal_2').showModal()
+    //                     <button onClick={() => {
+    //                         document.getElementById('my_modal_2').showModal()
 
-                        }}>What's new?</button>
-                    </div>
+    //                     }}>What's new?</button>
+    //                 </div>
 
-                    <button onClick={() => {
-                        document.getElementById('my_modal_2').showModal()
+    //                 <button onClick={() => {
+    //                     document.getElementById('my_modal_2').showModal()
 
-                    }} className='border border-zinc-300 dark:border-zinc-700 font-semibold py-2 px-4 rounded-xl text-sm'>
+    //                 }} className='border border-zinc-300 dark:border-zinc-700 font-semibold py-2 px-4 rounded-xl text-sm'>
 
-                        <span>Post</span>
-                    </button>
-                </div>
+    //                     <span>Post</span>
+    //                 </button>
+    //             </div>
 
-                <div className='p-6 flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500'>
-                    <div>Your feed looks empty</div>
-                    <div>Please follow users to see posts</div>
-                </div >
+    //             <div className='p-6 flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500'>
+    //                 <div>Your feed looks empty</div>
+    //                 <div>Please follow users to see posts</div>
+    //             </div >
 
-                {/* <div className='px-20 md:p-1 flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500'>
-                    <UserCrousel />
-                </div > */}
+    //             {/* <div className='px-20 md:p-1 flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500'>
+    //                 <UserCrousel />
+    //             </div > */}
 
-            </>
-        )
-    }
+    //         </>
+    //     )
+    // }
     return (
         <div>
             <div className='flex justify-between items-center py-4 px-6 border-b dark:border-zinc-800 border-zinc-200'>
@@ -176,9 +215,30 @@ function HomePage() {
                     <span>Post</span>
                 </button>
             </div>
-            {posts.map((post) => (
+            {/* {posts.map((post, index) => (
                 <UserPost key={post._id} post={post} />
-            ))}
+            ))} */}
+
+            {posts.map((post, index) => {
+                if (index + 1 === posts.length) {
+                    return (
+                        <div ref={lastPostObserver} key={post._id}>
+                            <UserPost post={post} />
+                        </div>
+                    );
+                } else {
+                    return (
+                        <div ref={index === posts.length - 2 ? lastPostRef : null} key={post._id}>
+                            <UserPost post={post} />
+                        </div>
+                    );
+                }
+            })}
+
+            {loading &&
+                <div className=''>
+                    <UserSkeleton />
+                </div>}
 
             <dialog id="my_modal_2" ref={modalRef} className="modal z-10 shadow-lg bg-zinc-950 bg-opacity-85 ">
                 <div className="modal-box bg-zinc-50 border dark:bg-neutral-900 dark:border-zinc-800" >
