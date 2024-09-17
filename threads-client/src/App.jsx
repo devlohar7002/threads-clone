@@ -50,7 +50,7 @@ export default function App() {
 
         {globalError ? <ErrorPage /> :
 
-          <div id="scrollableDiv" className={user && !isNonScrollable ? "fixed top-0 mt-20 left-0 right-0 bottom-0 pb-36 min-[840px]:pb-16 overflow-y-scroll hide-scrollbar h-full min-h-screen m-auto max-w-[640px] border-[1px] shadow-lg dark:shadow-zinc-950 border-zinc-200 dark:border-neutral-800 rounded-t-[40px] bg-white dark:bg-neutral-900" : "flex flex-col justify-center items-center dark:text-white "}>
+          <div id="scrollableDiv" className={user && !isNonScrollable ? "fixed top-0 mt-20 left-0 right-0 bottom-0 pb-36 min-[840px]:pb-16 overflow-y-scroll hide-scrollbar h-dvh min-h-dvh m-auto max-w-[640px] border-[1px] shadow-lg dark:shadow-zinc-950 border-zinc-200 dark:border-neutral-800 rounded-t-[40px] bg-white dark:bg-neutral-900" : "flex flex-col justify-center items-center dark:text-white "}>
             <Routes>
               {user && <Route path="/auth" element={<Navigate to={`/${user.username}`} replace />} />}
               <Route path="/update" element={user ? <UpdateProfilePage /> : <Navigate to={`/auth`} replace />} />
