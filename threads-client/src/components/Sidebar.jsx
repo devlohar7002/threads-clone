@@ -77,7 +77,7 @@ function Sidebar() {
 
     return (
         <>
-            <div id="sidebarDiv" className="fixed w-full z-10 left-0 bottom-[-2px] h-[70px] bg-white dark:bg-[#111114]  bg-opacity-95 dark:bg-opacity-95 min-[840px]:bg-transparent min-[840px]:dark:bg-transparent min-[840px]:h-screen bg-transparent min-[840px]:w-[80px] flex min-[840px]:flex-col justify-center items-center gap-2">
+            <div id="sidebarDiv" className="fixed w-full z-10 bottom-0 left-0 right-0 mb-0 h-[70px] bg-white dark:bg-[#111114]  bg-opacity-95 dark:bg-opacity-95 min-[840px]:bg-transparent min-[840px]:dark:bg-transparent min-[840px]:h-screen bg-transparent min-[840px]:w-[80px] flex min-[840px]:flex-col justify-center items-center gap-2">
                 <NavLink to="/" className={({ isActive }) => `hover:bg-zinc-100 rounded-xl p-[12px] hover:dark:bg-zinc-800 transition duration-300 ease-in-out transform hover:scale-105 ${isActive ? 'text-zinc-900 dark:text-zinc-200' : 'text-zinc-400 dark:text-zinc-500'}`}>
                     <GoHome className='h-[30px] w-[30px] transition duration-300 ease-in-out' />
                 </NavLink>

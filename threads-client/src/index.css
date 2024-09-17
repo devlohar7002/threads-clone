@@ -26,21 +26,13 @@
   /* For Firefox */
 }
 
-html {
-  height: -webkit-fill-available;
-}
-
 body {
   overscroll-behavior: none;
-  -webkit-transform: translateZ(0);
-  height: -webkit-fill-available;
+  margin-bottom: 70px;
+
 }
 
 #scrollableDiv {
-  -webkit-transform: translateZ(0);
-}
-
-#sidebarDiv {
   -webkit-transform: translateZ(0);
 }
 
