@@ -94,7 +94,7 @@ function Sidebar() {
                 </NavLink>
 
                 <div className=' p-[12px]  transition duration-300 ease-in-out transform hover:scale-105 text-zinc-400 dark:text-zinc-500'>
-                    <DarkModeButton className='h-[30px] w-[30px] transition duration-300 ease-in-out' />
+                    <DarkModeButton className=' transition duration-300 ease-in-out' />
                 </div>
 
             </div>
