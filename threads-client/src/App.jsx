@@ -42,7 +42,7 @@ export default function App() {
   return (
     <BrowserRouter>
 
-      <div className=" h-screen justify-center items-center ">
+      <div className=" h-dvh justify-center items-center ">
         {!enlargedImage && <nav id="headerDiv" className="fixed bg-white dark:bg-[#111114] h-20 top-0 left-0 right-0 z-10 w-full">
           <Header />
         </nav>}
