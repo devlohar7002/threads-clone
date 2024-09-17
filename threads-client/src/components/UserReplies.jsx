@@ -84,12 +84,12 @@ function UserReplies({ post: post_ }) {
         const getUser = async () => {
             try {
 
-                const response = await axios.get(`/api/users/profile/${post.postedBy}`)
+                const response = await axios.get(`/api/users/profile/${post?.postedBy}`)
 
                 setPostedByUser(response.data)
-                setLiked(response.data.likes.includes(_id))
+                // setLiked(response.data.likes.includes(_id))
             } catch (error) {
-                showToast(true, error.message)
+                // showToast(true, error.message)
             }
         }
         getUser()
@@ -105,11 +105,11 @@ function UserReplies({ post: post_ }) {
 
                 const response = await axios.get(`/api/posts/${post.replyTo}`)
                 setParentPost(response.data)
-                const res = await axios.get(`/api/users/profile/${response.data.postedBy}`)
-                setParentPostUser(res.data)
+                // const res = await axios.get(`/api/users/profile/${response.data?.postedBy}`)
+                // setParentPostUser(res.data)
 
             } catch (error) {
-                showToast(true, error.message)
+                // showToast(true, error.message)
             }
         }
         getParentPost()
@@ -119,14 +119,17 @@ function UserReplies({ post: post_ }) {
 
         const getParentPost = async () => {
             try {
-                const res = await axios.get(`/api/users/profile/${parentPost.postedBy}`)
+                const res = await axios.get(`/api/users/profile/${parentPost?.postedBy}`)
                 setParentPostUser(res.data)
 
             } catch (error) {
-                showToast(true, error.message)
+                // showToast(true, error.message)
             }
         }
-        getParentPost()
+        if (parentPost) {
+            getParentPost()
+        }
+
     }, [parentPost])
 
     const navigate = useNavigate()
@@ -146,10 +149,9 @@ function UserReplies({ post: post_ }) {
     return (
 
         <div className="relative flex flex-row p-6 gap-4 border-b-[1px] border-zinc-200 dark:border-zinc-800 ">
-            <div className='bg-zinc-200 dark:bg-zinc-700 left-[42px]'
+            <div className='bg-zinc-200 dark:bg-zinc-700 left-[44px]'
                 style={{
                     position: 'absolute',
-
                     top: 80,
                     bottom: 180,
                     width: '2px',
@@ -167,7 +169,7 @@ function UserReplies({ post: post_ }) {
 
 
                             <div className='flex gap-4 justify-between w-full'>
-                                <Link to={currentUser.username !== parentPostUser?.username ? '/' + parentPostUser?.username : '#'}>
+                                <Link to={'/' + parentPostUser?.username}>
                                     <div className='flex justify-center min-w-11 cursor-pointer'>
                                         <img className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-800 hover:scale-105" src={parentPostUser?.profilePic || '/default-avatar.jpg'} alt="" />
                                     </div>
@@ -178,7 +180,7 @@ function UserReplies({ post: post_ }) {
                                     <div className='flex justify-between w-full'>
                                         <div className="flex flex-row text-zinc gap-2 items-center">
 
-                                            <Link to={currentUser.username !== parentPostUser?.username ? '/' + parentPostUser?.username : '#'}>
+                                            <Link to={'/' + parentPostUser?.username}>
                                                 <div className='flex justify-center items-center gap-1 hover:underline'>
                                                     <span className="font-semibold">{parentPostUser?.username}</span>
                                                     <img className="w-4 h-4 rounded-full border border-zinc-200 dark:border-zinc-800" src="/verified.png" alt="" />
@@ -226,7 +228,7 @@ function UserReplies({ post: post_ }) {
                             </div> */}
 
                             <div className='flex gap-4 justify-between w-full'>
-                                <Link to={currentUser.username !== postedByUser.username ? postedByUser.username : '#'}>
+                                <Link to={'/' + postedByUser.username}>
                                     <div className='flex justify-center min-w-11 cursor-pointer'>
                                         <img className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-800 hover:scale-105" src={postedByUser.profilePic || '/default-avatar.jpg'} alt="" />
                                     </div>
@@ -236,7 +238,7 @@ function UserReplies({ post: post_ }) {
                                     <div className='flex justify-between w-full'>
                                         <div className="flex flex-row text-zinc gap-2 items-center">
 
-                                            <Link to={currentUser.username !== postedByUser.username ? postedByUser.username : '#'}>
+                                            <Link to={'/' + postedByUser.username}>
                                                 <div className='flex justify-center items-center gap-1 hover:underline'>
                                                     <span className="font-semibold">{postedByUser.username}</span>
                                                     <img className="w-4 h-4 rounded-full border border-zinc-200 dark:border-zinc-800" src="/verified.png" alt="" />

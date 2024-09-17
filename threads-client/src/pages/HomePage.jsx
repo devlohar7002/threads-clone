@@ -197,8 +197,8 @@ function HomePage() {
     // }
     return (
         <>
-            <div className='flex justify-between items-center py-4 px-6 border-b dark:border-zinc-800 border-zinc-200 w-full'>
-                <div className='flex justify-center items-center gap-4 text-zinc-400 dark:text-zinc-500 w-full'>
+            <div className='flex justify-between items-center py-4 px-6 border-b dark:border-zinc-800 border-zinc-200 w-full '>
+                <div className='flex justify-start items-center gap-4 text-zinc-400 dark:text-zinc-500 w-full '>
                     <img className="rounded-full w-10 h-10 object-cover border dark:border-zinc-700" src={`${currentUser?.profilePic || 'default-avatar.jpg'}`} alt="Avatar" />
 
                     <button onClick={() => {
@@ -279,9 +279,9 @@ function HomePage() {
                 <form method="dialog" className="modal-backdrop">
                     <button>close</button>
                 </form>
-                {(toast.show) && <ToastComponent error={toast.errorStatus} message={toast.message} />}
+
             </dialog>
-            {toast.show && <ToastComponent error={toast.errorStatus} message={toast.message} />}
+
 
         </>
     )

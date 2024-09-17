@@ -125,15 +125,14 @@ function UserPage() {
     <>
       <UserHeader user={user} />
 
-      {isRepostsPage ? userReposts.map((post) => <UserReposts key={post._id} post={post} />)
+      {isRepostsPage ? userReposts.map((post) => (post && <UserReposts key={post?._id} post={post} />))
         :
         userPosts.map((post) => (
-          isRepliesPage ? <UserReplies key={post._id} post={post} /> : <UserPost key={post._id} post={post} />
+          isRepliesPage ? (post && <UserReplies key={post._id} post={post} />) : (post && <UserPost key={post._id} post={post} />)
         ))
       }
 
 
-      {toast.show && <ToastComponent error={toast.errorStatus} message={toast.message} />}
 
     </>
   )

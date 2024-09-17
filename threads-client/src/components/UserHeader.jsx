@@ -149,7 +149,7 @@ export default function UserHeader({ user }) {
                     Repost
                 </NavLink>
 
-                {toast.show && <ToastComponent error={toast.errorStatus} message={toast.message} />}
+
             </div>
 
         </div>

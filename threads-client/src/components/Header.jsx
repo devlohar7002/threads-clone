@@ -4,7 +4,7 @@ import { useRecoilValue, useRecoilState } from "recoil"
 import themeAtom from "../atoms/themeAtom"
 import currentPageAtom from "../atoms/currentPageAtom"
 import { IoLogOutOutline } from "react-icons/io5";
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import userAtom from "@/atoms/userAtom"
 
 export default function Header() {
@@ -29,7 +29,13 @@ export default function Header() {
     return (
         <>
             <div className="flex p-4 px-6 z-50 justify-between items-center w-full ">
-                <img className="w-[34px] cursor-pointer" src={themeState === "dark" ? "/light-logo.svg" : "/dark-logo.svg"} alt="Light Logo" />
+                <Link to='/'>
+                    <div className=" cursor-pointer">
+                        <img className="w-[30px] " src={themeState === "dark" ? "/light-logo.svg" : "/dark-logo.svg"} alt="Light Logo" />
+                    </div>
+
+                </Link>
+
                 <div className="font-semibold">{currentPage}</div>
                 {/* <DarkModeButton /> */}
                 {user && <div>

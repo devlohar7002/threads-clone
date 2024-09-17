@@ -99,10 +99,10 @@ function UserRepost({ post: post_ }) {
         const getUser = async () => {
             try {
 
-                const response = await axios.get(`/api/users/profile/${post.postedBy}`)
+                const response = await axios.get(`/api/users/profile/${post?.postedBy}`)
 
                 setPostedByUser(response.data)
-                setLiked(response.data.likes.includes(_id))
+                // setLiked(response.data.likes.includes(_id))
             } catch (error) {
                 showToast(true, error.message)
             }
@@ -141,7 +141,7 @@ function UserRepost({ post: post_ }) {
                                 <div>reposted</div>
                             </div>
                             <div className='flex flex-row gap-4 w-full'>
-                                <Link to={currentUser.username !== postedByUser.username ? `/${postedByUser.username}` : '#'}>
+                                <Link to={`/${postedByUser.username}`}>
                                     <div className='flex justify-center min-w-11 cursor-pointer'>
                                         <img className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-800 hover:scale-105" src={postedByUser.profilePic || '/default-avatar.jpg'} alt="" />
                                     </div>
@@ -149,7 +149,7 @@ function UserRepost({ post: post_ }) {
                                     <div className='flex justify-between w-full'>
                                         <div className="flex flex-row text-zinc gap-2 items-center">
                                             {/* <img className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-800 object-cover" src="/zuck-avatar.png" alt="" /> */}
-                                            <Link to={currentUser.username !== postedByUser.username ? `/${postedByUser.username}` : '#'}>
+                                            <Link to={`/${postedByUser.username}`}>
                                                 <div className='flex justify-center items-center gap-1 hover:underline'>
                                                     <span className="font-semibold">{postedByUser.username}</span>
                                                     <img className="w-4 h-4 rounded-full border border-zinc-200 dark:border-zinc-800" src="/verified.png" alt="" />
@@ -187,8 +187,8 @@ function UserRepost({ post: post_ }) {
                                         {post.text}
                                     </div>
 
-                                    {post.img && <Flex onClick={toggleImageModal}>
-                                        <div onClick={toggleImageModal} className="max-h-96 overflow-hidden border-zinc-200 dark:border-zinc-800 my-2 rounded-lg flex justify-center items-center">
+                                    {post.img && <Flex >
+                                        <div className="max-h-96 overflow-hidden border-zinc-200 dark:border-zinc-800 my-2 rounded-lg flex justify-center items-center">
                                             <img className="max-w-full max-h-full object-scale-down" src={post.img} alt="Post Content" />
                                         </div>
 
@@ -205,45 +205,7 @@ function UserRepost({ post: post_ }) {
                                 </div>
                             )} */}
 
-                                    {isModalOpen && (
-                                        <div className="fixed inset-0 bg-black  flex justify-center items-center" onClick={toggleImageModal} style={{ zIndex: 9999 }}>
-                                            {/* <div className="relative">
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();  // Prevent modal from closing when clicking the button
-                                                toggleImageModal();
-                                            }}
-                                            className="absolute top-5 right-5 z-50 text-white p-2 rounded-md focus:outline-none "
-                                        >
-                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                        </button>
-                                        <img src={post.img} alt="Enlarged post" className="max-w-full max-h-full" />
-                                    </div> */}
 
-                                            <div className="relative flex justify-center items-center">
-                                                <img
-                                                    src={post.img}
-                                                    alt="Enlarged post"
-                                                    className="object-scale-down h-auto max-h-screen md:max-w-screen"
-                                                />
-                                                <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();  // Prevent modal from closing when clicking the button
-                                                        toggleImageModal();
-                                                    }}
-                                                    className="absolute top-2 right-2 m-2 rounded-full bg-zinc-700 bg-opacity-60 p-1 text-white"
-                                                    aria-label="Close image"
-                                                    style={{ zIndex: 50 }}
-                                                >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-                                                        <path d="M18 6L6 18M6 6l12 12"></path>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
 
                                     <div className='py-[10px] mx-[-6px]'>
                                         <Actions post={post} />

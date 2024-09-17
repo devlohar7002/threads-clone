@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import toastAtom from '@/atoms/toastAtom';
 
 function useShowToast() {
-    const [toast, setToast] = useState({ show: false, errorStatus: false, message: '' });
+    const [toast, setToast] = useRecoilState(toastAtom);
 
     const showToast = (errorStatus, message) => {
-        setToast({ show: true, errorStatus, message });
+        // Set the toast with the provided values
+        setToast({ errorStatus, message });
 
         // Automatically hide the toast after a few seconds
         setTimeout(() => {
-            setToast({ show: false, errorStatus: false, message: '' });
-        }, 3000); // 3 seconds, for example
+            // Reset the toast value to null after 3 seconds
+            setToast(null);
+        }, 3000); // 3 seconds
     };
 
     return { toast, showToast };

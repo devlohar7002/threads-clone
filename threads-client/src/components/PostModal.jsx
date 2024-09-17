@@ -46,7 +46,7 @@ function PostModal() {
                 <form method="dialog" className="modal-backdrop">
                     <button>close</button>
                 </form>
-                {(toast.show) && <ToastComponent error={toast.errorStatus} message={toast.message} />}
+
             </dialog>
         </div>
     )

@@ -77,7 +77,7 @@ function Sidebar() {
 
     return (
         <>
-            <div id="sidebarDiv" className="fixed w-full z-10 bottom-0 left-0 right-0 mb-0 h-[70px] bg-white dark:bg-[#111114]  bg-opacity-95 dark:bg-opacity-95 min-[840px]:bg-transparent min-[840px]:dark:bg-transparent min-[840px]:h-screen bg-transparent min-[840px]:w-[80px] flex min-[840px]:flex-col justify-center items-center gap-2">
+            <div id="sidebarDiv" className="fixed w-dvh z-10 bottom-0 left-0 right-0 mb-0 h-[70px] bg-white dark:bg-[#111114]  bg-opacity-95 dark:bg-opacity-95 min-[840px]:bg-transparent min-[840px]:dark:bg-transparent min-[840px]:h-screen bg-transparent min-[840px]:w-[80px] flex min-[840px]:flex-col justify-center items-center gap-2">
                 <NavLink to="/" className={({ isActive }) => `hover:bg-zinc-100 rounded-xl p-[12px] hover:dark:bg-zinc-800 transition duration-300 ease-in-out transform hover:scale-105 ${isActive ? 'text-zinc-900 dark:text-zinc-200' : 'text-zinc-400 dark:text-zinc-500'}`}>
                     <GoHome className='h-[30px] w-[30px] transition duration-300 ease-in-out' />
                 </NavLink>
@@ -99,7 +99,7 @@ function Sidebar() {
 
             </div>
 
-            <dialog id="my_modal_2" ref={modalRef} className="modal z-10 shadow-lg bg-zinc-950 bg-opacity-85 ">
+            <dialog id="my_modal_2" ref={modalRef} className="modal w-dvh z-10 shadow-lg bg-zinc-950 bg-opacity-85 ">
                 <div className="modal-box bg-zinc-50 border dark:bg-neutral-900 dark:border-zinc-800" >
                     <div className="flex flex-row gap-2 border-zinc-200 dark:border-zinc-800">
 
@@ -138,7 +138,7 @@ function Sidebar() {
                 <form method="dialog" className="modal-backdrop">
                     <button>close</button>
                 </form>
-                {(toast.show) && <ToastComponent error={toast.errorStatus} message={toast.message} />}
+
             </dialog>
         </>
     );

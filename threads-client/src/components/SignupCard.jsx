@@ -52,7 +52,7 @@ function SignupCard() {
 
     return (
 
-        <div className="flex flex-col items-center justify-center w-[350px] md:w-[400px] p-4 ">
+        <div className="flex h-dvh flex-col items-center justify-center w-[350px] md:w-[400px] p-4 ">
 
             <div className="w-full bg-white rounded-lg shadow-lg dark:shadow-zinc-950 border md:mt-0 sm:max-w-md xl:p-0 dark:bg-zinc-900 dark:border-neutral-900">
                 <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -87,7 +87,7 @@ function SignupCard() {
                 </div>
             </div>
 
-            {(toast.show) && <ToastComponent error={toast.errorStatus} message={toast.message} />}
+
         </div>
 
     )

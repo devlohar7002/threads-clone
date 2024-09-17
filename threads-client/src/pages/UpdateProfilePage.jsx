@@ -85,20 +85,20 @@ function UpdateProfilePage() {
     };
 
     return (
-        <div className='flex flex-col gap-4'>
+        <div className='flex flex-col gap-1'>
             <div className='flex justify-start '>
                 <Link to="/" className='bg-white dark:bg-[#111114] shadow-md border dark:border-zinc-800 rounded-full p-1'>
                     <BiArrowBack className='w-4 h-4' />
                 </Link></div>
 
-            <div className="flex flex-col justify-center items-center gap-2 border  max-w-sm w-[350px] md:w-[400px] bg-white rounded-lg shadow-lg dark:shadow-zinc-950 dark:border md:mt-0 sm:max-w-md p-8 dark:bg-zinc-900 dark:border-zinc-900">
-                <div className="flex flex-col justify-center items-center gap-2">
+            <div className="flex flex-col justify-center items-center gap-1 border  max-w-sm w-[350px] md:w-[400px] bg-white rounded-lg shadow-lg dark:shadow-zinc-950 dark:border md:mt-0 sm:max-w-md p-6 dark:bg-zinc-900 dark:border-zinc-900">
+                <div className="flex flex-col justify-center items-center gap-1">
                     <img className="rounded-full w-24 h-24 shadow-sm shadow-zinc-400 dark:shadow-zinc-800 object-cover" src={imgUrl || user.profilePic || '/default-avatar.jpg'} />
                     <Text className='font-bold'>{user.name}</Text>
                 </div>
 
                 <form onSubmit={handleFormSubmit} className='w-full'>
-                    <div className='w-full flex flex-col gap-4 mt-8'>
+                    <div className='w-full flex flex-col gap-2 mt-4'>
                         <div className='w-full'>
                             <input onChange={(e) => {
                                 setInputs({ ...inputs, name: e.target.value });
@@ -123,7 +123,7 @@ function UpdateProfilePage() {
                         <Textarea onChange={(e) => {
                             setInputs({ ...inputs, bio: e.target.value })
                             setInputsChange(true)
-                        }} value={inputs.bio} id="bio" placeholder="Update bio" rows={3} className="bg-zinc-50 border resize-none border-zinc-200 text-gray-900 text-sm rounded-lg focus:ring-zinc-300 focus:border-zinc-300 block w-full p-2.5 dark:bg-zinc-800 dark:border-zinc-800 dark:placeholder-zinc-500 dark:text-white dark:focus:ring-zinc-700 dark:focus:border-zinc-700" />
+                        }} value={inputs.bio} id="bio" placeholder="Update bio" rows={2} className="bg-zinc-50 border resize-none border-zinc-200 text-gray-900 text-sm rounded-lg focus:ring-zinc-300 focus:border-zinc-300 block w-full p-2.5 dark:bg-zinc-800 dark:border-zinc-800 dark:placeholder-zinc-500 dark:text-white dark:focus:ring-zinc-700 dark:focus:border-zinc-700" />
 
                         <div>
                             <input onChange={(e) => {
@@ -160,7 +160,7 @@ function UpdateProfilePage() {
                         </button>
                     </div>
                 </form>
-                {(toast.show) && <ToastComponent error={toast.errorStatus} message={toast.message} />}
+
             </div>
 
         </div>

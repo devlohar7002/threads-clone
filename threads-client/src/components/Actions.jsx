@@ -62,7 +62,7 @@ const Actions = ({ post: post_ }) => {
 		const getUser = async () => {
 			try {
 
-				const response = await axios.get(`/api/users/profile/${post.postedBy}`)
+				const response = await axios.get(`/api/users/profile/${post?.postedBy}`)
 
 				setPostedByUser(response.data)
 				// setLiked(response.data.likes.includes(user._id))
@@ -270,10 +270,12 @@ const Actions = ({ post: post_ }) => {
 					<Text>{post.likes.length} likes</Text>
 					<div className="bg-zinc-400 w-[3px] h-[3px] rounded-full">
 					</div>
-					<Text>{post.replies.length} replies</Text>
+					<Link to={`/${postedByUser.username}/post/${post._id}`}>
+						<Text className="cursor-pointer">{post.replies.length} replies</Text>
+					</Link>
 				</Flex>
 
-				{toast.show && <ToastComponent error={toast.errorStatus} message={toast.message} />}
+
 			</div>
 
 			<dialog id={post._id} ref={modalRef} className="modal z-10 shadow-lg bg-zinc-950 bg-opacity-85 ">
@@ -354,7 +356,7 @@ const Actions = ({ post: post_ }) => {
 				<form method="dialog" className="modal-backdrop">
 					<button>close</button>
 				</form>
-				{(toast.show) && <ToastComponent error={toast.errorStatus} message={toast.message} />}
+
 			</dialog >
 
 

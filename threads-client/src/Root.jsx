@@ -18,7 +18,7 @@ function Root() {
         <>
 
             <Theme appearance={themeState}>
-                <App />
+                <App className="w-dvh bg-white dark:bg-[#111114]" />
             </Theme>
 
         </>

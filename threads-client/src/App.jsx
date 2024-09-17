@@ -13,6 +13,8 @@ import globalErrorAtom from "./atoms/globalErrorAtom";
 import isNonAcrollableAtom from "./atoms/isNonScrollableAtom";
 import Sidebar from "./components/Sidebar";
 import enlagedImageAtom from './atoms/enlagedImageAtom';
+import ToastComponent from "./components/ToastComponent";
+import toastAtom from "./atoms/toastAtom";
 
 export default function App() {
   const user = useRecoilValue(userAtom);
@@ -20,6 +22,7 @@ export default function App() {
   const globalError = useRecoilValue(globalErrorAtom)
   const isNonScrollable = useRecoilValue(isNonAcrollableAtom)
   const enlargedImage = useRecoilValue(enlagedImageAtom)
+  const toast = useRecoilValue(toastAtom)
 
   useEffect(() => {
     const handleWheel = (event) => {
@@ -42,7 +45,7 @@ export default function App() {
   return (
     <BrowserRouter>
 
-      <div className=" h-dvh justify-center items-center ">
+      <div className=" h-dvh w-dvh flex justify-center items-center ">
         {!enlargedImage && <nav id="headerDiv" className="fixed bg-white dark:bg-[#111114] h-20 top-0 left-0 right-0 z-10 w-full">
           <Header />
         </nav>}
@@ -50,7 +53,7 @@ export default function App() {
 
         {globalError ? <ErrorPage /> :
 
-          <div id="scrollableDiv" className={user && !isNonScrollable ? "fixed top-0 mt-20 left-0 right-0 bottom-0 pb-36 min-[840px]:pb-16 overflow-y-scroll hide-scrollbar h-dvh min-h-dvh m-auto max-w-[640px] border-[1px] shadow-lg dark:shadow-zinc-950 border-zinc-200 dark:border-neutral-800 rounded-t-[40px] bg-white dark:bg-neutral-900" : "flex flex-col justify-center items-center dark:text-white "}>
+          <div id="scrollableDiv" className={user && !isNonScrollable ? "fixed top-0 mt-20 left-0 right-0 bottom-0 pb-36 min-[840px]:pb-16 overflow-y-scroll hide-scrollbar h-dvh w-dvh min-h-dvh m-auto max-w-[640px] border-[1px] shadow-lg dark:shadow-zinc-950 border-zinc-200 dark:border-neutral-800 rounded-t-[40px] bg-white dark:bg-neutral-900" : "flex flex-col justify-center items-center dark:text-white "}>
             <Routes>
               {user && <Route path="/auth" element={<Navigate to={`/${user.username}`} replace />} />}
               <Route path="/update" element={user ? <UpdateProfilePage /> : <Navigate to={`/auth`} replace />} />
@@ -65,6 +68,8 @@ export default function App() {
             </Routes>
           </div>
         }
+
+        {toast && <ToastComponent error={toast.errorStatus} message={toast.message} />}
       </div>
 
 
